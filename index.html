@@ -101,7 +101,6 @@
     }
     #theme-toggle:hover { transform: scale(1.08); }
     #theme-toggle svg { width: 20px; height: 20px; }
-    body.ready section.cover.show ~ * #theme-toggle { }
   </style>
 </head>
 <body>
@@ -151,30 +150,35 @@
         return window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
       }
 
-      function paint(btn) {
+      function repaint() {
+        var btn = document.getElementById('theme-toggle');
+        if (!btn) return;
         var e = effective();
         btn.innerHTML = e === 'dark' ? SUN : MOON;
         btn.title = e === 'dark' ? '切换到明亮模式' : '切换到暗色模式';
       }
 
-      function toggle() {
+      function mount() {
+        var btn = document.getElementById('theme-toggle');
+        if (!btn) {
+          btn = document.createElement('button');
+          btn.id = 'theme-toggle';
+          btn.type = 'button';
+          btn.setAttribute('aria-label', '切换明亮/暗色主题');
+          document.body.appendChild(btn);
+        }
+        repaint();
+      }
+
+      // 事件委托:点击 #theme-toggle 时切换主题(不依赖按钮自身的 onclick)
+      document.addEventListener('click', function (ev) {
+        var hit = ev.target && ev.target.closest ? ev.target.closest('#theme-toggle') : null;
+        if (!hit) return;
         var next = effective() === 'dark' ? 'light' : 'dark';
         document.documentElement.setAttribute('data-theme', next);
         try { localStorage.setItem(KEY, next); } catch (e) {}
-        var btn = document.getElementById('theme-toggle');
-        if (btn) paint(btn);
-      }
-
-      function mount() {
-        if (document.getElementById('theme-toggle')) return;
-        var btn = document.createElement('button');
-        btn.id = 'theme-toggle';
-        btn.type = 'button';
-        btn.setAttribute('aria-label', '切换明亮/暗色主题');
-        btn.onclick = toggle;
-        paint(btn);
-        document.body.appendChild(btn);
-      }
+        repaint();
+      });
 
       if (document.body) mount();
       else document.addEventListener('DOMContentLoaded', mount);
