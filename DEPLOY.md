@@ -21,12 +21,9 @@
 
 > 仓库根目录已包含 `.nojekyll` 空文件，确保 GitHub Pages 不用 Jekyll 处理（否则 `_sidebar.md`、`_coverpage.md` 等下划线开头的文件会被忽略）。
 
-## 方式二：GitHub Actions 自动部署
+## 方式二：GitHub Actions 自动部署（可选）
 
-仓库已内置 `.github/workflows/deploy.yml`。若想用 Actions 部署：
-
-1. 打开 **Settings → Pages → Source**，选择 **GitHub Actions**。
-2. 每次 `git push` 到 `main`，工作流会自动把站点发布到 Pages。
+本仓库默认采用方式一（分支托管），未启用 Actions。若偏好用 Actions 部署，在 **Settings → Pages → Source** 选 **GitHub Actions**，并添加一个使用 `actions/upload-pages-artifact` 的工作流，把仓库根目录作为 artifact 上传即可。
 
 ## 本地预览
 
