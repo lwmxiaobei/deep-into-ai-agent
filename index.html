@@ -7,86 +7,101 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0">
   <meta name="theme-color" content="#1e3a5f">
   <link rel="icon" href="docs/images/_cover.png">
+  <!-- 防闪烁:渲染前应用已保存的主题 -->
+  <script>
+    (function () {
+      try {
+        var t = localStorage.getItem('agentbook-theme');
+        if (t === 'light' || t === 'dark') document.documentElement.setAttribute('data-theme', t);
+      } catch (e) {}
+    })();
+  </script>
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/docsify@4/lib/themes/vue.css">
   <style>
     :root {
-      --brand: #1e3a5f;
-      --brand-light: #2c5a8a;
-      --accent: #3b7dd8;
-      --bg: #ffffff;
-      --text: #2c3038;
-      --sidebar-bg: #f7f9fb;
+      --brand: #1e3a5f; --brand-light: #2c5a8a; --accent: #3b7dd8;
+      --bg: #ffffff; --text: #2c3038; --sidebar-bg: #f7f9fb; --border: #eaecef;
+      --h1: #1e3a5f; --h2: #2c5a8a; --h3: #34506e; --strong: #1e3a5f;
+      --code-bg: #eef2f7; --code-text: #c0341d; --stripe: #f7f9fb;
+      --sidebar-link: #3a4250; --img-border: #e6e9ee;
     }
+    /* 暗色变量:跟随系统(未手动强制亮色时) */
+    @media (prefers-color-scheme: dark) {
+      :root:not([data-theme="light"]) {
+        --bg: #12151a; --text: #c8ced8; --sidebar-bg: #161a21; --border: #232833;
+        --h1: #7fb0e8; --h2: #6fa3de; --h3: #89a9cc; --strong: #9ec5f0;
+        --code-bg: #232a35; --code-text: #e0966a; --stripe: #171b22;
+        --sidebar-link: #b4bcc8; --img-border: #2a3140;
+      }
+    }
+    /* 暗色变量:用户手动强制 */
+    :root[data-theme="dark"] {
+      --bg: #12151a; --text: #c8ced8; --sidebar-bg: #161a21; --border: #232833;
+      --h1: #7fb0e8; --h2: #6fa3de; --h3: #89a9cc; --strong: #9ec5f0;
+      --code-bg: #232a35; --code-text: #e0966a; --stripe: #171b22;
+      --sidebar-link: #b4bcc8; --img-border: #2a3140;
+    }
+
     * { -webkit-font-smoothing: antialiased; }
     body {
       font-family: -apple-system, BlinkMacSystemFont, "PingFang SC", "Hiragino Sans GB",
         "Microsoft YaHei", "Source Han Sans SC", "Noto Sans CJK SC", sans-serif;
     }
-    /* 顶部品牌名 */
+    body, .content, .markdown-section { background: var(--bg); }
     .app-name-link { color: var(--brand) !important; font-weight: 700; }
-    .sidebar { background: var(--sidebar-bg); border-right: 1px solid #eaecef; }
+    .sidebar { background: var(--sidebar-bg); border-right: 1px solid var(--border); }
     .sidebar > h1 { margin: 1.4rem 0 .6rem; }
     .sidebar > h1 .app-name-link { font-size: 1.15rem; }
     .sidebar-nav { line-height: 1.9; }
-    .sidebar-nav li > a { color: #3a4250; }
+    .sidebar-nav li > a { color: var(--sidebar-link); }
     .sidebar-nav li.active > a { color: var(--accent); font-weight: 600; border-right: 2px solid var(--accent); }
     .sidebar-nav > ul > li > a { font-weight: 600; color: var(--brand); }
-    /* 链接与强调 */
     .markdown-section a { color: var(--accent); }
-    .markdown-section strong { color: var(--brand); font-weight: 600; }
-    /* 标题 */
-    .markdown-section h1 { font-size: 1.9rem; color: var(--brand); border-bottom: 3px solid var(--brand); padding-bottom: .4rem; margin-top: .5rem; }
-    .markdown-section h2 { font-size: 1.5rem; color: var(--brand-light); margin-top: 2.4rem; padding-left: .6rem; border-left: 4px solid var(--accent); }
-    .markdown-section h3 { font-size: 1.2rem; color: #34506e; margin-top: 1.8rem; }
+    .markdown-section strong { color: var(--strong); font-weight: 600; }
+    .markdown-section h1 { font-size: 1.9rem; color: var(--h1); border-bottom: 3px solid var(--h1); padding-bottom: .4rem; margin-top: .5rem; }
+    .markdown-section h2 { font-size: 1.5rem; color: var(--h2); margin-top: 2.4rem; padding-left: .6rem; border-left: 4px solid var(--accent); }
+    .markdown-section h3 { font-size: 1.2rem; color: var(--h3); margin-top: 1.8rem; }
     .markdown-section p, .markdown-section li { line-height: 1.86; color: var(--text); letter-spacing: .01em; }
     .markdown-section { max-width: 52rem; }
-    /* 图表/表格截图 */
     .markdown-section img {
       display: block; margin: 1.6rem auto; max-width: 100%;
-      border: 1px solid #e6e9ee; border-radius: 8px;
-      box-shadow: 0 2px 14px rgba(30,58,95,.08); cursor: zoom-in;
+      border: 1px solid var(--img-border); border-radius: 8px;
+      box-shadow: 0 2px 14px rgba(30,58,95,.08); cursor: zoom-in; background: #fff;
     }
-    /* 代码 */
     .markdown-section pre { border-radius: 8px; }
     .markdown-section code { font-family: "SF Mono", "JetBrains Mono", Menlo, Consolas, monospace; }
     .markdown-section pre > code { font-size: .86rem; line-height: 1.55; }
-    .markdown-section :not(pre) > code { background: #eef2f7; color: #c0341d; padding: .15em .4em; border-radius: 4px; }
-    /* 表格 */
+    .markdown-section :not(pre) > code { background: var(--code-bg); color: var(--code-text); padding: .15em .4em; border-radius: 4px; }
     .markdown-section table { display: table; width: 100%; }
-    .markdown-section tr:nth-child(2n) { background: #f7f9fb; }
+    .markdown-section tr:nth-child(2n) { background: var(--stripe); }
     .markdown-section th { background: var(--brand); color: #fff; }
-    /* 分页 */
     .pagination-item-title { color: var(--accent); }
-    /* 封面 */
+    .docsify-progress { background: linear-gradient(90deg, var(--accent), var(--brand-light)) !important; }
+
+    /* 封面(始终深色渐变) */
     section.cover.show { background: linear-gradient(135deg, #14243b 0%, #1e3a5f 55%, #2c5a8a 100%) !important; }
     section.cover .cover-main > h1 { color: #fff; font-weight: 800; letter-spacing: .04em; text-shadow: 0 2px 12px rgba(0,0,0,.35); }
     section.cover .cover-main > h1 a { color: #fff; }
     section.cover .cover-main > blockquote p { color: #eaf1f8; font-size: 1.15rem; }
     section.cover .cover-main > ul { color: #c7d4e3; }
     section.cover .cover-main a { border-radius: 8px; }
-    /* 主按钮(最后一个链接) */
     section.cover .cover-main > p:last-child a:last-child { background: #3b7dd8; border-color: #3b7dd8; color: #fff; }
     section.cover .cover-main > p:last-child a:last-child:hover { background: #5a94e0; border-color: #5a94e0; }
-    /* 次按钮 */
     section.cover .cover-main > p:last-child a:first-child { color: #dbe6f2; border-color: #7ba3cf; }
     section.cover .cover-main > p:last-child a:first-child:hover { background: rgba(255,255,255,.1); }
     section.cover .cover-main img { border-radius: 12px; box-shadow: 0 12px 40px rgba(0,0,0,.4); }
-    /* 阅读进度顶栏 */
-    .docsify-progress { background: linear-gradient(90deg, var(--accent), var(--brand-light)) !important; }
-    @media (prefers-color-scheme: dark) {
-      :root { --bg:#12151a; --text:#c8ced8; --sidebar-bg:#161a21; }
-      body, .content, .markdown-section { background: var(--bg); }
-      .sidebar { background: var(--sidebar-bg); border-right-color:#232833; }
-      .sidebar-nav li > a { color:#b4bcc8; }
-      .markdown-section h1{color:#7fb0e8;border-bottom-color:#2c5a8a;}
-      .markdown-section h2{color:#6fa3de;}
-      .markdown-section h3{color:#89a9cc;}
-      .markdown-section p,.markdown-section li{color:var(--text);}
-      .markdown-section strong{color:#9ec5f0;}
-      .markdown-section img{border-color:#2a3140;background:#f5f7fa;}
-      .markdown-section :not(pre) > code{background:#232a35;color:#e0966a;}
-      .markdown-section tr:nth-child(2n){background:#171b22;}
+
+    /* 主题切换按钮 */
+    #theme-toggle {
+      position: fixed; top: 14px; right: 18px; z-index: 100;
+      width: 42px; height: 42px; border-radius: 50%;
+      border: 1px solid var(--border); background: var(--sidebar-bg); color: var(--text);
+      cursor: pointer; display: flex; align-items: center; justify-content: center;
+      box-shadow: 0 2px 12px rgba(0,0,0,.15); transition: background .2s, transform .15s;
     }
+    #theme-toggle:hover { transform: scale(1.08); }
+    #theme-toggle svg { width: 20px; height: 20px; }
+    body.ready section.cover.show ~ * #theme-toggle { }
   </style>
 </head>
 <body>
@@ -94,10 +109,8 @@
   <script>
     window.$docsify = {
       name: '深入理解 AI Agent',
-      repo: '',
       loadSidebar: true,
       coverpage: true,
-      onlyCover: false,
       loadNavbar: false,
       homepage: 'README.md',
       subMaxLevel: 2,
@@ -108,29 +121,10 @@
         '/.*/_sidebar.md': '/_sidebar.md',
         '/_sidebar.md': '/_sidebar.md'
       },
-      search: {
-        placeholder: '全文搜索…',
-        noData: '找不到匹配结果',
-        depth: 4,
-        paths: 'auto'
-      },
-      pagination: {
-        previousText: '上一章',
-        nextText: '下一章',
-        crossChapter: true,
-        crossChapterText: true
-      },
-      count: {
-        countable: true,
-        fontsize: '0.85em',
-        color: '#8a94a6',
-        language: 'chinese'
-      },
-      copyCode: {
-        buttonText: '复制',
-        errorText: '出错',
-        successText: '已复制'
-      }
+      search: { placeholder: '全文搜索…', noData: '找不到匹配结果', depth: 4, paths: 'auto' },
+      pagination: { previousText: '上一章', nextText: '下一章', crossChapter: true, crossChapterText: true },
+      count: { countable: true, fontsize: '0.85em', color: '#8a94a6', language: 'chinese' },
+      copyCode: { buttonText: '复制', errorText: '出错', successText: '已复制' }
     };
   </script>
   <script src="https://cdn.jsdelivr.net/npm/docsify@4/lib/docsify.min.js"></script>
@@ -144,5 +138,47 @@
   <script src="https://cdn.jsdelivr.net/npm/prismjs@1/components/prism-json.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/prismjs@1/components/prism-bash.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/prismjs@1/components/prism-yaml.min.js"></script>
+  <!-- 主题切换 -->
+  <script>
+    (function () {
+      var KEY = 'agentbook-theme';
+      var SUN = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.2" y1="4.2" x2="5.6" y2="5.6"/><line x1="18.4" y1="18.4" x2="19.8" y2="19.8"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.2" y1="19.8" x2="5.6" y2="18.4"/><line x1="18.4" y1="5.6" x2="19.8" y2="4.2"/></svg>';
+      var MOON = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>';
+
+      function effective() {
+        var t = document.documentElement.getAttribute('data-theme');
+        if (t === 'light' || t === 'dark') return t;
+        return window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+      }
+
+      function paint(btn) {
+        var e = effective();
+        btn.innerHTML = e === 'dark' ? SUN : MOON;
+        btn.title = e === 'dark' ? '切换到明亮模式' : '切换到暗色模式';
+      }
+
+      function toggle() {
+        var next = effective() === 'dark' ? 'light' : 'dark';
+        document.documentElement.setAttribute('data-theme', next);
+        try { localStorage.setItem(KEY, next); } catch (e) {}
+        var btn = document.getElementById('theme-toggle');
+        if (btn) paint(btn);
+      }
+
+      function mount() {
+        if (document.getElementById('theme-toggle')) return;
+        var btn = document.createElement('button');
+        btn.id = 'theme-toggle';
+        btn.type = 'button';
+        btn.setAttribute('aria-label', '切换明亮/暗色主题');
+        btn.onclick = toggle;
+        paint(btn);
+        document.body.appendChild(btn);
+      }
+
+      if (document.body) mount();
+      else document.addEventListener('DOMContentLoaded', mount);
+    })();
+  </script>
 </body>
 </html>
