@@ -1,0 +1,8 @@
+# 本地历史与临时文件
+.remember/
+.DS_Store
+*.log
+node_modules/
+.vscode/
+.idea/
+Thumbs.db
